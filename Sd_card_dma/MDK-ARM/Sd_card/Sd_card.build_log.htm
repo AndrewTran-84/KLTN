@@ -1,0 +1,125 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: µVision V5.41.0.0
+Copyright (C) 2024 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: Tran Thinh, krimwineson, LIC=----
+ 
+Tool Versions:
+Toolchain:       MDK-Lite  Version: 5.41.0.0
+Toolchain Path:  E:\stm32\keilc\keil\ARM\ARMCLANG\Bin
+C Compiler:      ArmClang.exe V6.22
+Assembler:       Armasm.exe V6.22
+Linker/Locator:  ArmLink.exe V6.22
+Library Manager: ArmAr.exe V6.22
+Hex Converter:   FromElf.exe V6.22
+CPU DLL:         SARMCM3.DLL V5.41.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V3.3.0.0
+Dialog DLL:      TCM.DLL V1.56.4.0
+ 
+<h2>Project:</h2>
+E:\code_stm32\Andrew_Tran\Sd_card_dma\MDK-ARM\Sd_card.uvprojx
+Project File Date:  08/05/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V6.22', folder: 'E:\stm32\keilc\keil\ARM\ARMCLANG\Bin'
+Build target 'Sd_card'
+compiling sd_diskio_spi.c...
+compiling spi.c...
+compiling dma.c...
+compiling gpio.c...
+compiling main.c...
+compiling usart.c...
+assembling startup_stm32f103xb.s...
+compiling stm32f1xx_it.c...
+compiling sd_spi.c...
+../Core/Src/sd_benchmark.c(69): warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+   69 |     printf("[%s] Write %lu bytes in %lu ms\r\n", MODE_STR, size_bytes, elapsed);
+      |                        ~~~                                 ^~~~~~~~~~
+      |                        %u
+../Core/Src/sd_benchmark.c(69): warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+   69 |     printf("[%s] Write %lu bytes in %lu ms\r\n", MODE_STR, size_bytes, elapsed);
+      |                                     ~~~                                ^~~~~~~
+      |                                     %u
+../Core/Src/sd_benchmark.c(99): warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+   99 |     printf("[%s] Read %lu bytes in %lu ms\r\n", MODE_STR, size_bytes, elapsed);
+      |                       ~~~                                 ^~~~~~~~~~
+      |                       %u
+../Core/Src/sd_benchmark.c(99): warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+   99 |     printf("[%s] Read %lu bytes in %lu ms\r\n", MODE_STR, size_bytes, elapsed);
+      |                                    ~~~                                ^~~~~~~
+      |                                    %u
+../Core/Src/sd_benchmark.c(109): warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+  109 |         if (w > 0) printf("Write speed: %lu KB/s\r\n", (TEST_SIZE / 1024 * 1000) / w);
+      |                                         ~~~            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                         %u
+../Core/Src/sd_benchmark.c(110): warning: format specifies type 'unsigned long' but the argument has type 'uint32_t' (aka 'unsigned int') [-Wformat]
+  110 |         if (r > 0) printf("Read  speed: %lu KB/s\r\n", (TEST_SIZE / 1024 * 1000) / r);
+      |                                         ~~~            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                         %u
+6 warnings generated.
+compiling sd_benchmark.c...
+../Core/Src/sd_functions.c(60): warning: passing 'const Diskio_drvTypeDef *' to parameter of type 'Diskio_drvTypeDef *' discards qualifiers [-Wincompatible-pointer-types-discards-qualifiers]
+   60 |         if (FATFS_LinkDriver(&SD_Driver, sd_path) != 0) {
+      |                              ^~~~~~~~~~
+../Middlewares/Third_Party/FatFs/src\ff_gen_drv.h(94): note: passing argument to parameter 'drv' here
+   94 | uint8_t FATFS_LinkDriver(Diskio_drvTypeDef *drv, char *path);
+      |                                             ^
+1 warning generated.
+compiling sd_functions.c...
+compiling stm32f1xx_hal_msp.c...
+compiling user_diskio.c...
+compiling fatfs.c...
+compiling stm32f1xx_hal_gpio_ex.c...
+compiling stm32f1xx_hal.c...
+compiling stm32f1xx_hal_rcc_ex.c...
+compiling stm32f1xx_hal_gpio.c...
+compiling stm32f1xx_hal_dma.c...
+compiling stm32f1xx_hal_rcc.c...
+compiling stm32f1xx_hal_cortex.c...
+compiling stm32f1xx_hal_pwr.c...
+compiling stm32f1xx_hal_flash.c...
+compiling system_stm32f1xx.c...
+compiling stm32f1xx_hal_flash_ex.c...
+compiling stm32f1xx_hal_exti.c...
+compiling diskio.c...
+compiling ff_gen_drv.c...
+compiling syscall.c...
+compiling ccsbcs.c...
+compiling stm32f1xx_hal_spi.c...
+compiling stm32f1xx_hal_uart.c...
+compiling ff.c...
+linking...
+Program Size: Code=4698 RO-data=310 RW-data=12 ZI-data=1940  
+FromELF: creating hex file...
+"Sd_card\Sd_card.axf" - 0 Error(s), 7 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.1.0.pack
+                ARM::CMSIS@6.1.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F1xx_DFP.2.4.1.pack
+                Keil::STM32F1xx_DFP@2.4.1
+                STMicroelectronics STM32F1 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_Sd_card
+  E:/stm32/keilc/pack/ARM/CMSIS/6.1.0/CMSIS/Core/Include
+  E:/stm32/keilc/pack/Keil/STM32F1xx_DFP/2.4.1/Device/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.1.0
+      Include file:  CMSIS/Core/Include/tz_context.h
+Build Time Elapsed:  00:00:03
+</pre>
+</body>
+</html>
