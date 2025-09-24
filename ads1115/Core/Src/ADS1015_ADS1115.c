@@ -1,9 +1,3 @@
-/*
- * ADS1015_ADS1115.c
- *
- *  Created on: Feb 9, 2020
- *      Author: Adafruit. Rewritten by Daniel Mårtensson
- */
 
 #include "ADS1015_ADS1115.h"
 

@@ -159,7 +159,7 @@ not necessary for to use this port.  They are defined so the common demo files
 #define portINLINE __inline
 
 #ifndef portFORCE_INLINE
-	#define portFORCE_INLINE __forceinline
+	#define portFORCE_INLINE static inline __attribute__((always_inline))
 #endif
 
 /*-----------------------------------------------------------*/
