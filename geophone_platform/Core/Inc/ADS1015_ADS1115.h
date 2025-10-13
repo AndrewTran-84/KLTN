@@ -138,8 +138,12 @@ uint16_t ADSreadADC_SingleEnded(ADS1xx5_I2C* i2c, uint8_t channel);
 int16_t  ADSreadADC_Differential_0_1(ADS1xx5_I2C* i2c);
 int16_t  ADSreadADC_Differential_2_3(ADS1xx5_I2C* i2c);
 void  ADSstartComparator_SingleEnded(ADS1xx5_I2C* i2c, uint8_t channel, int16_t threshold);
-int16_t  ADSgetLastConversionResults();
+int16_t  ADSgetLastConversionResults(ADS1xx5_I2C* i2c);
 void  ADSsetGain(ADS1xx5_I2C* i2c, adsGain_t gain);
 adsGain_t  ADSgetGain(ADS1xx5_I2C* i2c);
+
+/* New DMA-enabled non-blocking read (uses HAL_I2C_Mem_Read_DMA then waits on semaphore)
+   Returns signed result similar to ADSreadADC_* */
+int16_t ADSreadADC_SingleEnded_DMA(ADS1xx5_I2C* i2c, uint8_t channel, uint32_t wait_ms);
 
 #endif /* SRC_ADS1015_ADS1115_ADS1015_ADS1115_H_ */

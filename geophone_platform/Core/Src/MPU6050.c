@@ -2,21 +2,35 @@
 #include "main.h"
 #include "i2c.h"
 #include <stdio.h>
+#include "FreeRTOS.h"
+#include "semphr.h"
+
+/* External semaphores (defined in freertos.c) */
+extern SemaphoreHandle_t xMPUSem;
+extern SemaphoreHandle_t xADSSem;
 
 Struct_MPU6050 MPU6050;
 
 static float LSB_Sensitivity_ACC;
 static float LSB_Sensitivity_GYRO;
 
-volatile uint8_t dma_complete = 0; // C? hoàn t?t DMA
-
-// Callback khi DMA hoàn t?t
+/* Use semaphores for DMA completion: created in freertos.c */
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     if (hi2c->Instance == I2C1)
     {
-        dma_complete = 1; // Ð?t c? khi d?c xong
+        if (xMPUSem != NULL) {
+            xSemaphoreGiveFromISR(xMPUSem, &xHigherPriorityTaskWoken);
+        }
     }
+    else if (hi2c->Instance == I2C2)
+    {
+        if (xADSSem != NULL) {
+            xSemaphoreGiveFromISR(xADSSem, &xHigherPriorityTaskWoken);
+        }
+    }
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
 void MPU6050_Writebyte(uint8_t reg_addr, uint8_t val)
@@ -36,14 +50,24 @@ void MPU6050_Readbyte(uint8_t reg_addr, uint8_t* data)
 
 void MPU6050_Readbytes(uint8_t reg_addr, uint8_t len, uint8_t* data)
 {
-    // S? d?ng DMA d? d?c 14 byte
+    /* Start DMA read for MPU (I2C1) */
     if (HAL_I2C_Mem_Read_DMA(&hi2c1, MPU6050_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, data, len) != HAL_OK)
     {
         Error_Handler();
     }
-    // Ch? DMA hoàn t?t (s? d?ng polling)
-    while (!dma_complete);
-    dma_complete = 0; // Reset c?
+    /* Wait for semaphore from ISR */
+    if (xMPUSem == NULL) {
+        /* fallback busy-wait (shouldn't happen if semaphore created) */
+        while (HAL_I2C_GetState(&hi2c1) != HAL_I2C_STATE_READY) {}
+        return;
+    }
+    if (xSemaphoreTake(xMPUSem, pdMS_TO_TICKS(200)) != pdTRUE) {
+        /* Timeout -> handle or fallback */
+        // Option: try blocking read
+        if (HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, data, len, 1000) != HAL_OK) {
+            Error_Handler();
+        }
+    }
 }
 
 void MPU6050_Initialization(void)
@@ -179,7 +203,7 @@ void MPU6050_DataConvert(Struct_MPU6050* mpu6050)
 
 int MPU6050_DataReady(void)
 {
-    return HAL_GPIO_ReadPin(MPU6050_INT_PORT, MPU6050_INT_PIN); // S? d?ng PB5
+    return HAL_GPIO_ReadPin(MPU6050_INT_PORT, MPU6050_INT_PIN); // PB5
 }
 
 void MPU6050_ProcessData(Struct_MPU6050* mpu6050)

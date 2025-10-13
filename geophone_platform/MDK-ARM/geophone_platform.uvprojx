@@ -341,7 +341,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xB</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/STM32F1xx_HAL_Driver/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;..\Middlewares\Third_Party\FreeRTOS\Source\portable\GCC\ARM_CM3;../Middlewares/Third_Party/FatFs/src;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Core/Inc;../FATFS/Target;../FATFS/App;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Drivers/STM32F1xx_HAL_Driver/Inc;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2;..\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM3;../Middlewares/Third_Party/FatFs/src;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -494,6 +494,11 @@
               <FileName>sd_spi.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\sd_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>co_detection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\co_detection.c</FilePath>
             </File>
           </Files>
         </Group>
