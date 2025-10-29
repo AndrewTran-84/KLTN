@@ -1,0 +1,4 @@
+../Core/Src/MPU6050.c:18:26:mpu_read_bytes	32	static
+../Core/Src/MPU6050.c:24:26:mpu_write_byte	32	static
+../Core/Src/MPU6050.c:29:5:MPU6050_Init	16	static
+../Core/Src/MPU6050.c:62:5:MPU6050_ReadAll	32	static

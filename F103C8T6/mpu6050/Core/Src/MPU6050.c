@@ -1,0 +1,205 @@
+/* MPU6050_modified.c - s?a timeout I2C, b?t latch INT, dùng HAL_UART_Transmit cho debug */
+#include "MPU6050.h"
+#include "main.h"
+#include "i2c.h"
+#include <stdio.h> 
+#include "usart.h"
+#include <stdarg.h>
+#include <string.h>
+
+
+Struct_MPU6050 MPU6050;
+
+static float LSB_Sensitivity_ACC;
+static float LSB_Sensitivity_GYRO;
+
+#define I2C_TIMEOUT_MS 100
+
+extern UART_HandleTypeDef huart1; // ensure UART handle available for debug
+
+void DBG_PRINT(const char *fmt, ...)
+{
+    char dbgbuf[128];
+    va_list args;
+    va_start(args, fmt);
+    int len = vsnprintf(dbgbuf, sizeof(dbgbuf), fmt, args);
+    va_end(args);
+    if (len > 0) {
+        if (len > (int)sizeof(dbgbuf)) len = sizeof(dbgbuf);
+        HAL_UART_Transmit(&huart1, (uint8_t*)dbgbuf, len, HAL_MAX_DELAY);
+    }
+}
+
+void MPU6050_Writebyte(uint8_t reg_addr, uint8_t val)
+{
+    HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, &val, 1, I2C_TIMEOUT_MS);
+}
+
+void MPU6050_Writebytes(uint8_t reg_addr, uint8_t len, uint8_t* data)
+{
+    HAL_I2C_Mem_Write(&hi2c1, MPU6050_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, data, len, I2C_TIMEOUT_MS);
+}
+
+void MPU6050_Readbyte(uint8_t reg_addr, uint8_t* data)
+{
+    HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, data, 1, I2C_TIMEOUT_MS);
+}
+
+void MPU6050_Readbytes(uint8_t reg_addr, uint8_t len, uint8_t* data)
+{
+    HAL_I2C_Mem_Read(&hi2c1, MPU6050_ADDR, reg_addr, I2C_MEMADD_SIZE_8BIT, data, len, I2C_TIMEOUT_MS);
+}
+
+void MPU6050_Initialization(void)
+{
+    HAL_Delay(50);
+    uint8_t who_am_i = 0;
+    DBG_PRINT("Checking MPU6050...\r\n");
+
+    MPU6050_Readbyte(MPU6050_WHO_AM_I, &who_am_i);
+    if (who_am_i == 0x68)
+    {
+        DBG_PRINT("MPU6050 who_am_i = 0x%02x...OK\r\n", who_am_i);
+    }
+    else
+    {
+        DBG_PRINT("ERROR!\r\n");
+        DBG_PRINT("MPU6050 who_am_i : 0x%02x should be 0x68\r\n", who_am_i);
+        while (1)
+        {
+            DBG_PRINT("who am i error. Can not recognize mpu6050\r\n");
+            HAL_Delay(100);
+        }
+    }
+
+    // Reset the whole module before initialization
+    MPU6050_Writebyte(MPU6050_PWR_MGMT_1, 0x1 << 7);
+    HAL_Delay(100);
+
+    // Power Management setting
+    MPU6050_Writebyte(MPU6050_PWR_MGMT_1, 0x00);
+    HAL_Delay(50);
+
+    // Sample rate divider
+    MPU6050_Writebyte(MPU6050_SMPRT_DIV, 39); // Sample Rate = 200Hz
+    HAL_Delay(50);
+
+    // FSYNC and DLPF setting
+    MPU6050_Writebyte(MPU6050_CONFIG, 0x00);
+    HAL_Delay(50);
+
+    // GYRO FULL SCALE setting
+    uint8_t FS_SCALE_GYRO = 0x0;
+    MPU6050_Writebyte(MPU6050_GYRO_CONFIG, FS_SCALE_GYRO << 3);
+    HAL_Delay(50);
+
+    // ACCEL FULL SCALE setting
+    uint8_t FS_SCALE_ACC = 0x0;
+    MPU6050_Writebyte(MPU6050_ACCEL_CONFIG, FS_SCALE_ACC << 3);
+    HAL_Delay(50);
+
+    // INT enable
+    uint8_t INT_ENABLE = 0x1; // DATA READY
+    MPU6050_Writebyte(MPU6050_INT_ENABLE, INT_ENABLE);
+    HAL_Delay(50);
+
+    // INT pin configuration (active high, LATCH enable)
+    uint8_t INT_LEVEL = 0x0;
+    uint8_t LATCH_INT_EN = 0x1;   // changed: latch until cleared
+    uint8_t INT_RD_CLEAR = 0x0;   // clear by reading INT_STATUS when latched
+    MPU6050_Writebyte(MPU6050_INT_PIN_CFG, (INT_LEVEL << 7) | (LATCH_INT_EN << 5) | (INT_RD_CLEAR << 4));
+    HAL_Delay(50);
+
+    // Disable Sleep
+    MPU6050_Writebyte(MPU6050_PWR_MGMT_1, 0x00);
+    HAL_Delay(50);
+
+    // set LSB Sensitivity from your configured FS
+    MPU6050_Get_LSB_Sensitivity(FS_SCALE_GYRO, FS_SCALE_ACC);
+
+    DBG_PRINT("MPU6050 initialization finished\r\n");
+
+    
+}
+
+/* Get Raw Data from sensor */
+void MPU6050_Get6AxisRawData(Struct_MPU6050* mpu6050)
+{
+    uint8_t data[14];
+    MPU6050_Readbytes(MPU6050_ACCEL_XOUT_H, 14, data);
+
+    mpu6050->acc_x_raw = (data[0] << 8) | data[1];
+    mpu6050->acc_y_raw = (data[2] << 8) | data[3];
+    mpu6050->acc_z_raw = (data[4] << 8) | data[5];
+
+    mpu6050->temperature_raw = (data[6] << 8) | data[7];
+
+    mpu6050->gyro_x_raw = ((data[8] << 8) | data[9]);
+    mpu6050->gyro_y_raw = ((data[10] << 8) | data[11]);
+    mpu6050->gyro_z_raw = ((data[12] << 8) | data[13]);
+}
+
+void MPU6050_Get_LSB_Sensitivity(uint8_t FS_SCALE_GYRO, uint8_t FS_SCALE_ACC)
+{
+    switch (FS_SCALE_GYRO)
+    {
+    case 0:
+        LSB_Sensitivity_GYRO = 131.f;
+        break;
+    case 1:
+        LSB_Sensitivity_GYRO = 65.5f;
+        break;
+    case 2:
+        LSB_Sensitivity_GYRO = 32.8f;
+        break;
+    case 3:
+        LSB_Sensitivity_GYRO = 16.4f;
+        break;
+    default:
+        LSB_Sensitivity_GYRO = 131.f;
+        break;
+    }
+
+    switch (FS_SCALE_ACC)
+    {
+    case 0:
+        LSB_Sensitivity_ACC = 16384.f;
+        break;
+    case 1:
+        LSB_Sensitivity_ACC = 8192.f;
+        break;
+    case 2:
+        LSB_Sensitivity_ACC = 4096.f;
+        break;
+    case 3:
+        LSB_Sensitivity_ACC = 2048.f;
+        break;
+    default:
+        LSB_Sensitivity_ACC = 16384.f;
+        break;
+    }
+}
+
+void MPU6050_DataConvert(Struct_MPU6050* mpu6050)
+{
+    mpu6050->acc_x = mpu6050->acc_x_raw / LSB_Sensitivity_ACC;
+    mpu6050->acc_y = mpu6050->acc_y_raw / LSB_Sensitivity_ACC;
+    mpu6050->acc_z = mpu6050->acc_z_raw / LSB_Sensitivity_ACC;
+
+    mpu6050->temperature = (mpu6050->temperature_raw) / 340.0f + 36.53f;
+
+    mpu6050->gyro_x = mpu6050->gyro_x_raw / LSB_Sensitivity_GYRO;
+    mpu6050->gyro_y = mpu6050->gyro_y_raw / LSB_Sensitivity_GYRO;
+    mpu6050->gyro_z = mpu6050->gyro_z_raw / LSB_Sensitivity_GYRO;
+}
+
+int MPU6050_DataReady(void)
+{
+    return HAL_GPIO_ReadPin(MPU6050_INT_PORT, MPU6050_INT_PIN);
+}
+
+void MPU6050_ProcessData(Struct_MPU6050* mpu6050)
+{
+    MPU6050_Get6AxisRawData(mpu6050);
+    MPU6050_DataConvert(mpu6050);
+}

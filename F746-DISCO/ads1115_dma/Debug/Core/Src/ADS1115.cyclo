@@ -1,0 +1,8 @@
+../Core/Src/ADS1115.c:21:12:writeRegister16	2
+../Core/Src/ADS1115.c:33:12:readRegister16	2
+../Core/Src/ADS1115.c:44:14:ads_get_fullscale_voltage	7
+../Core/Src/ADS1115.c:57:6:ADS1115_Init	1
+../Core/Src/ADS1115.c:104:5:ADS1115_ReadRaw_Blocking	2
+../Core/Src/ADS1115.c:114:12:ADS1115_StartRead_DMA	3
+../Core/Src/ADS1115.c:125:5:ADS1115_ReadRaw_DMA_Blocking	4
+../Core/Src/ADS1115.c:142:5:ADS1115_ReadVoltage_DMA_Blocking	2

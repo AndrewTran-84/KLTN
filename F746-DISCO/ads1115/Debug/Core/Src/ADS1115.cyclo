@@ -1,0 +1,10 @@
+../Core/Src/ADS1115.c:17:17:dr_to_delay_ms	9
+../Core/Src/ADS1115.c:32:6:ADS1115_Init	1
+../Core/Src/ADS1115.c:38:10:ADS1115_readRegister	2
+../Core/Src/ADS1115.c:47:6:ADS1115_writeRegister	1
+../Core/Src/ADS1115.c:55:9:ADS1115_readConversionRegister	1
+../Core/Src/ADS1115.c:62:13:ADS1115_startSingleShot	1
+../Core/Src/ADS1115.c:69:12:ADS1115_waitForConversion	3
+../Core/Src/ADS1115.c:82:9:ADS1115_readSingleEnded	7
+../Core/Src/ADS1115.c:121:9:ADS1115_readDifferential	3
+../Core/Src/ADS1115.c:146:7:ADS1115_rawToVoltage	7

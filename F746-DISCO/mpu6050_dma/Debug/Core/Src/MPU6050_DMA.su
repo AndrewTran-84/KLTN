@@ -1,0 +1,7 @@
+../Core/Src/MPU6050_DMA.c:24:5:MPU6050_DMA_Init	32	static
+../Core/Src/MPU6050_DMA.c:69:19:MPU6050_DMA_StartRead	16	static
+../Core/Src/MPU6050_DMA.c:77:9:MPU6050_DMA_DataReady	4	static
+../Core/Src/MPU6050_DMA.c:82:6:MPU6050_DMA_ProcessData	16	static
+../Core/Src/MPU6050_DMA.c:113:17:MPU6050_DMA_GetLastData	4	static
+../Core/Src/MPU6050_DMA.c:119:6:MPU6050_DMA_I2C_RxCpltCallback	16	static
+../Core/Src/MPU6050_DMA.c:127:6:MPU6050_DMA_I2C_ErrorCallback	16	static
