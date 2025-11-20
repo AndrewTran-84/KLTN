@@ -1,0 +1,8 @@
+../Core/Src/MCP4725_dma.c:20:5:MCP4725_Init	2
+../Core/Src/MCP4725_dma.c:28:6:MCP4725_SetSemaphore	1
+../Core/Src/MCP4725_dma.c:29:6:MCP4725_SetI2CMutex	1
+../Core/Src/MCP4725_dma.c:33:5:MCP4725_WriteValue_DMA	10
+../Core/Src/MCP4725_dma.c:71:5:MCP4725_SetValue	1
+../Core/Src/MCP4725_dma.c:75:6:MCP4725_DMA_TxCpltCallback	4
+../Core/Src/MCP4725_dma.c:84:6:MCP4725_DMA_RxCpltCallback	1
+../Core/Src/MCP4725_dma.c:89:6:MCP4725_DMA_ErrorCallback	3

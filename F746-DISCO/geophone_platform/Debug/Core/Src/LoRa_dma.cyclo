@@ -1,0 +1,15 @@
+../Core/Src/LoRa_dma.c:61:20:CS_LOW	1
+../Core/Src/LoRa_dma.c:62:20:CS_HIGH	1
+../Core/Src/LoRa_dma.c:66:12:LoRa_singleWrite	2
+../Core/Src/LoRa_dma.c:76:12:LoRa_singleRead	3
+../Core/Src/LoRa_dma.c:88:12:LoRa_readBurst	3
+../Core/Src/LoRa_dma.c:99:12:LoRa_writeBurst_DMA	3
+../Core/Src/LoRa_dma.c:116:6:LoRa_SetTxSemaphore	1
+../Core/Src/LoRa_dma.c:119:6:LoRa_SPI_TxCplt_Callback	3
+../Core/Src/LoRa_dma.c:129:6:LoRa_DIO0_Callback	6
+../Core/Src/LoRa_dma.c:145:6:LoRa_Reset	1
+../Core/Src/LoRa_dma.c:152:5:LoRa_Init	4
+../Core/Src/LoRa_dma.c:183:5:LoRa_SetFrequency	4
+../Core/Src/LoRa_dma.c:196:5:LoRa_Transmit_DMA	8
+../Core/Src/LoRa_dma.c:229:5:LoRa_receive_ready	3
+../Core/Src/LoRa_dma.c:231:5:LoRa_read_payload	6

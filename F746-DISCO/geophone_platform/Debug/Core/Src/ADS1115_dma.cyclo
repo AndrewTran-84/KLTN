@@ -1,0 +1,11 @@
+../Core/Src/ADS1115_dma.c:7:14:ads_get_fullscale_voltage	7
+../Core/Src/ADS1115_dma.c:31:12:writeRegister16	2
+../Core/Src/ADS1115_dma.c:41:12:readRegister16_block	2
+../Core/Src/ADS1115_dma.c:51:6:ADS1115_Init	1
+../Core/Src/ADS1115_dma.c:71:6:ADS1115_SetSemaphore	1
+../Core/Src/ADS1115_dma.c:73:6:ADS1115_SetI2CMutex	1
+../Core/Src/ADS1115_dma.c:76:5:ADS1115_StartRead_DMA	5
+../Core/Src/ADS1115_dma.c:93:5:ADS1115_ReadRaw_DMA_Blocking	6
+../Core/Src/ADS1115_dma.c:120:5:ADS1115_ReadVoltage_DMA_Blocking	3
+../Core/Src/ADS1115_dma.c:132:6:ADS1115_DMA_RxCpltCallback	4
+../Core/Src/ADS1115_dma.c:144:6:ADS1115_DMA_ErrorCallback	3
